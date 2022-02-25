@@ -34,10 +34,10 @@ CREATE OR REPLACE FUNCTION fn_order_track()  -- updating the quantity in product
             RETURN NEW;
         ELSIF (TG_OP = 'UPDATE') THEN
 			IF OLD.quantity > NEW.quantity THEN
-            	update products set quantity=quantity+OLD.quantity where product_id= OLD.product_id;
+            	update products set quantity=quantity+OLD.quantity-NEW.quantity where product_id= OLD.product_id;
             	RETURN NEW;
 			ELSE
-				update products set quantity=quantity-NEW.quantity where product_id= NEW.product_id;
+				update products set quantity=quantity-NEW.quantity+OLD.quantity where product_id= NEW.product_id;
 				RETURN NEW;
 			END IF;
         ELSIF (TG_OP = 'INSERT') THEN
